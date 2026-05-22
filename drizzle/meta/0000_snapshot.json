@@ -1,0 +1,547 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "58f4d628-fc00-471b-b97c-0950f0cf76dd",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "activos": {
+      "name": "activos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "categoria": {
+          "name": "categoria",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nivel_criticidad": {
+          "name": "nivel_criticidad",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "estado": {
+          "name": "estado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'disponible'"
+        },
+        "ubicacion_fisica": {
+          "name": "ubicacion_fisica",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fecha_ultima_calibracion": {
+          "name": "fecha_ultima_calibracion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fecha_vencimiento_calibracion": {
+          "name": "fecha_vencimiento_calibracion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "vida_util_estimada_dias": {
+          "name": "vida_util_estimada_dias",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "prestamos": {
+      "name": "prestamos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id_activo": {
+          "name": "id_activo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id_mecanico": {
+          "name": "id_mecanico",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id_pañolero_salida": {
+          "name": "id_pañolero_salida",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "id_orden_trabajo": {
+          "name": "id_orden_trabajo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fecha_hora_salida": {
+          "name": "fecha_hora_salida",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fecha_hora_devolucion": {
+          "name": "fecha_hora_devolucion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "inspeccion_salida_pañolero": {
+          "name": "inspeccion_salida_pañolero",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "inspeccion_salida_mecanico": {
+          "name": "inspeccion_salida_mecanico",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "resultado_inspeccion_salida": {
+          "name": "resultado_inspeccion_salida",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "inspeccion_devolucion_pañolero": {
+          "name": "inspeccion_devolucion_pañolero",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "resultado_inspeccion_devolucion": {
+          "name": "resultado_inspeccion_devolucion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fallo_reportado_uso": {
+          "name": "fallo_reportado_uso",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "descripcion_fallo": {
+          "name": "descripcion_fallo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "id_pañolero_devolucion": {
+          "name": "id_pañolero_devolucion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cierre_validado": {
+          "name": "cierre_validado",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "prestamos_id_activo_activos_id_fk": {
+          "name": "prestamos_id_activo_activos_id_fk",
+          "tableFrom": "prestamos",
+          "tableTo": "activos",
+          "columnsFrom": [
+            "id_activo"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prestamos_id_mecanico_usuarios_id_fk": {
+          "name": "prestamos_id_mecanico_usuarios_id_fk",
+          "tableFrom": "prestamos",
+          "tableTo": "usuarios",
+          "columnsFrom": [
+            "id_mecanico"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prestamos_id_pañolero_salida_usuarios_id_fk": {
+          "name": "prestamos_id_pañolero_salida_usuarios_id_fk",
+          "tableFrom": "prestamos",
+          "tableTo": "usuarios",
+          "columnsFrom": [
+            "id_pañolero_salida"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prestamos_id_pañolero_devolucion_usuarios_id_fk": {
+          "name": "prestamos_id_pañolero_devolucion_usuarios_id_fk",
+          "tableFrom": "prestamos",
+          "tableTo": "usuarios",
+          "columnsFrom": [
+            "id_pañolero_devolucion"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "historial_estados": {
+      "name": "historial_estados",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id_activo": {
+          "name": "id_activo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "estado_anterior": {
+          "name": "estado_anterior",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "estado_nuevo": {
+          "name": "estado_nuevo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id_usuario_responsable": {
+          "name": "id_usuario_responsable",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "motivo": {
+          "name": "motivo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "historial_estados_id_activo_activos_id_fk": {
+          "name": "historial_estados_id_activo_activos_id_fk",
+          "tableFrom": "historial_estados",
+          "tableTo": "activos",
+          "columnsFrom": [
+            "id_activo"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "historial_estados_id_usuario_responsable_usuarios_id_fk": {
+          "name": "historial_estados_id_usuario_responsable_usuarios_id_fk",
+          "tableFrom": "historial_estados",
+          "tableTo": "usuarios",
+          "columnsFrom": [
+            "id_usuario_responsable"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "evaluaciones_tecnicas": {
+      "name": "evaluaciones_tecnicas",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id_prestamo": {
+          "name": "id_prestamo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id_inspector": {
+          "name": "id_inspector",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fecha_evaluacion": {
+          "name": "fecha_evaluacion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "clasificacion_causa": {
+          "name": "clasificacion_causa",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "descripcion_tecnica": {
+          "name": "descripcion_tecnica",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "dictamen": {
+          "name": "dictamen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "requiere_accion_rrhh": {
+          "name": "requiere_accion_rrhh",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "evaluaciones_tecnicas_id_prestamo_prestamos_id_fk": {
+          "name": "evaluaciones_tecnicas_id_prestamo_prestamos_id_fk",
+          "tableFrom": "evaluaciones_tecnicas",
+          "tableTo": "prestamos",
+          "columnsFrom": [
+            "id_prestamo"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "evaluaciones_tecnicas_id_inspector_usuarios_id_fk": {
+          "name": "evaluaciones_tecnicas_id_inspector_usuarios_id_fk",
+          "tableFrom": "evaluaciones_tecnicas",
+          "tableTo": "usuarios",
+          "columnsFrom": [
+            "id_inspector"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "usuarios": {
+      "name": "usuarios",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "rol": {
+          "name": "rol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "usuarios_email_unique": {
+          "name": "usuarios_email_unique",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

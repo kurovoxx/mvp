@@ -1,0 +1,48 @@
+flowchart TD
+    A([Inicio: Solicitud de herramienta]) --> B
+
+    B["Pañolero: Verifica disponibilidad\ny certificado de calibración vigente"]
+    B --> C{¿Disponible y\ncalibrada?}
+
+    C -- No --> D([Fin: Solicitud rechazada\nNotifica alternativas al mecánico])
+    C -- Sí --> E
+
+    E["Mecánico + Pañolero: Inspección\nvisual conjunta del activo"]
+    E --> F{¿Inspección\naprobada?}
+
+    F -- No --> G["Activo BLOQUEADO\nDeriva al Inspector MyCal"]
+    F -- Sí --> H
+
+    H["Pañolero: Aprueba salida\nTransfiere custodia al Mecánico"]
+    H --> I
+
+    I["Mecánico: Usa herramienta en terreno\nEstado: EN USO — OT activa"]
+    I --> J{¿Fallo reportado\ndurante el uso?}
+
+    J -- Sí --> K["Detención urgente\nInforme de incidente"]
+    K --> L
+    J -- No --> L
+
+    L["Mecánico: Devuelve herramienta al pañol\nEstado: EN DEVOLUCIÓN"]
+    L --> M
+
+    M["Pañolero: Inspección de devolución\nFisuras, golpes, desgaste anormal"]
+    M --> N{¿Daño o desgaste\nanormal detectado?}
+
+    N -- No --> O
+    N -- Sí --> P
+
+    P["Inspector MyCal: Evalúa causa raíz\nEstado: EN EVALUACIÓN"]
+    P --> Q{¿Negligencia\noperacional?}
+
+    Q -- No --> R["Dictamen: Mantención\nprogramada o baja técnica"]
+    Q -- Sí --> S["Dictamen: Acción RRHH\n+ mantención o baja"]
+
+    R --> O
+    S --> O
+
+    O["Pañolero: Registra cierre validado\nLibera responsabilidad del Mecánico"]
+    O --> T([Fin: Herramienta DISPONIBLE])
+    
+	
+falta la conexión de Activo BLOQUEADO\nDeriva al Inspector MyCal hasta Inspector MyCal: Evalúa causa raíz\nEstado: EN EVALUACIÓN
