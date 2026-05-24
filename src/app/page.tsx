@@ -9,18 +9,15 @@ export default async function HomePage() {
     redirect('/login');
   }
 
-  const rol = (session.user as any).rol;
+  const roleRoutes: Record<string, string> = {
+    'jefe_turno': '/dashboard/jefe',
+    'pañolero': '/dashboard/panolero',
+    'mecanico': '/dashboard/mecanico',
+    'inspector': '/dashboard/inspector',
+  };
 
-  switch (rol) {
-    case 'jefe_turno':
-      redirect('/dashboard/jefe');
-    case 'pañolero':
-      redirect('/dashboard/panolero');
-    case 'mecanico':
-      redirect('/dashboard/mecanico');
-    case 'inspector':
-      redirect('/dashboard/inspector');
-    default:
-      redirect('/login');
-  }
+  const userRole = (session.user as any).rol;
+  const destination = roleRoutes[userRole] || '/login';
+
+  redirect(destination);
 }

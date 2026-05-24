@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/auth-options';
 import { redirect } from 'next/navigation';
 import { LogoutButton } from '@/components/LogoutButton';
-import { HardHat, LayoutDashboard, Settings, User } from 'lucide-react';
+import { HardHat, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function DashboardLayout({
@@ -17,64 +17,74 @@ export default async function DashboardLayout({
   }
 
   const user = session.user as any;
+  const userRolePath = user.rol.replace('jefe_turno', 'jefe').replace('pañolero', 'panolero');
 
   const navigation = [
-    { name: 'Dashboard', href: `/dashboard/${user.rol.replace('jefe_turno', 'jefe').replace('pañolero', 'panolero')}`, icon: LayoutDashboard },
+    { name: 'Dashboard', href: `/dashboard/${userRolePath}`, icon: LayoutDashboard },
   ];
 
   return (
-    <div className="flex h-screen bg-slate-50">
-      {/* Sidebar - Desktop */}
-      <div className="hidden md:flex md:w-64 md:flex-col">
-        <div className="flex flex-col flex-grow pt-5 overflow-y-auto bg-slate-900 border-r border-slate-800">
-          <div className="flex items-center flex-shrink-0 px-4 mb-5 space-x-2 text-white">
-            <HardHat className="text-blue-400" />
-            <span className="text-xl font-bold tracking-tight">FaenaControl</span>
+    <div className="flex h-screen bg-background">
+      <aside className="hidden md:flex md:w-64 md:flex-col bg-primary border-r border-primary shadow-xl z-10">
+        <div className="flex flex-col flex-grow pt-6 overflow-y-auto">
+          <div className="flex items-center flex-shrink-0 px-6 mb-8 gap-3">
+            <div className="p-2 bg-accent/10 rounded-lg">
+              <HardHat className="text-accent w-6 h-6" strokeWidth={2.5} />
+            </div>
+            <span className="text-xl font-semibold tracking-tight text-surface">
+              FaenaControl
+            </span>
           </div>
-          <div className="flex flex-col flex-grow px-2 mt-5">
-            <nav className="flex-1 space-y-1">
+          
+          <div className="flex flex-col flex-grow px-4">
+            <nav className="flex-1 space-y-1.5">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="flex items-center px-2 py-2 text-sm font-medium text-slate-300 rounded-md hover:bg-slate-800 hover:text-white group"
+                  className="flex items-center px-3 py-2.5 text-sm font-medium text-secondary rounded-lg transition-all duration-200 hover:bg-surface/10 hover:text-surface group"
                 >
-                  <item.icon className="w-5 h-5 mr-3 text-slate-400 group-hover:text-slate-300" />
+                  <item.icon className="w-5 h-5 mr-3 text-secondary group-hover:text-surface transition-colors" />
                   {item.name}
                 </Link>
               ))}
             </nav>
           </div>
-          <div className="flex flex-col p-4 space-y-3 bg-slate-800/50">
-            <div className="flex items-center space-x-3">
-              <div className="flex-shrink-0">
-                <div className="flex items-center justify-center w-8 h-8 bg-blue-500 rounded-full text-white font-bold text-xs">
-                  {user.name?.[0]}
-                </div>
+          
+          <div className="p-4 border-t border-surface/10 bg-primary">
+            <div className="flex items-center gap-3 mb-4 px-2">
+              <div className="flex items-center justify-center w-9 h-9 bg-accent rounded-full text-surface font-semibold text-sm shadow-sm">
+                {user.name?.[0]?.toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{user.name}</p>
-                <p className="text-xs text-slate-400 truncate capitalize">{user.rol.replace('_', ' ')}</p>
+                <p className="text-sm font-medium text-surface truncate">
+                  {user.name}
+                </p>
+                <p className="text-xs text-secondary truncate capitalize">
+                  {user.rol.replace('_', ' ')}
+                </p>
               </div>
             </div>
             <LogoutButton />
           </div>
         </div>
-      </div>
+      </aside>
 
-      {/* Main Content */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        {/* Mobile Header */}
-        <header className="flex items-center justify-between px-4 py-4 bg-white border-b border-slate-200 md:hidden">
-          <div className="flex items-center space-x-2">
-            <HardHat className="text-blue-600" />
-            <span className="text-lg font-bold">FaenaControl</span>
+        <header className="flex items-center justify-between px-4 py-3 bg-surface border-b border-border-light shadow-sm md:hidden z-20">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 bg-accent/10 rounded-md">
+              <HardHat className="text-accent w-5 h-5" />
+            </div>
+            <span className="text-base font-semibold text-primary">FaenaControl</span>
           </div>
           <LogoutButton />
         </header>
 
-        <main className="flex-1 relative overflow-y-auto focus:outline-none p-4 md:p-8">
-          {children}
+        <main className="flex-1 relative overflow-y-auto focus:outline-none w-full">
+          <div className="max-w-7xl mx-auto p-4 md:p-8 lg:px-10">
+            {children}
+          </div>
         </main>
       </div>
     </div>

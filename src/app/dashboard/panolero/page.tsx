@@ -1,33 +1,56 @@
 import InventoryList from '@/components/InventoryList';
 import PendingApprovals from '@/components/PendingApprovals';
 import PendingReturns from '@/components/PendingReturns';
+import { PackageSearch, ClipboardCheck, ArrowLeftRight } from 'lucide-react';
 
 export default function PanoleroDashboard() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Panel de Pañolero</h1>
-          <p className="mt-1 text-sm text-slate-600">Gestión de inventario y flujo de préstamos.</p>
-        </div>
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto pb-8">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-primary">
+          Panel de Pañolero
+        </h1>
+        <p className="mt-1.5 text-sm text-secondary">
+          Gestión de inventario y flujo de préstamos.
+        </p>
       </div>
       
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="px-4 py-5 border-b border-slate-200 sm:px-6">
-          <h3 className="text-lg font-medium leading-6 text-slate-900">Inventario de Activos</h3>
+      <section className="bg-surface rounded-xl border border-border-light shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-border-light flex items-center gap-2.5 bg-background/50">
+          <PackageSearch className="w-5 h-5 text-secondary" />
+          <h2 className="text-sm font-semibold text-primary">
+            Inventario de Activos
+          </h2>
         </div>
-        <InventoryList />
-      </div>
+        <div className="p-0 sm:p-2">
+          <InventoryList />
+        </div>
+      </section>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h2 className="text-lg font-semibold mb-4 text-slate-900">Solicitudes Pendientes</h2>
-          <PendingApprovals />
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h2 className="text-lg font-semibold mb-4 text-slate-900">Inspecciones de Devolución</h2>
-          <PendingReturns />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <section className="bg-surface rounded-xl border border-border-light shadow-sm overflow-hidden flex flex-col">
+          <div className="px-6 py-4 border-b border-border-light flex items-center gap-2.5 bg-background/50">
+            <ClipboardCheck className="w-5 h-5 text-accent" />
+            <h2 className="text-sm font-semibold text-primary">
+              Solicitudes Pendientes
+            </h2>
+          </div>
+          <div className="p-6 flex-1 overflow-auto bg-background/20">
+            <PendingApprovals />
+          </div>
+        </section>
+
+        <section className="bg-surface rounded-xl border border-border-light shadow-sm overflow-hidden flex flex-col">
+          <div className="px-6 py-4 border-b border-border-light flex items-center gap-2.5 bg-background/50">
+            <ArrowLeftRight className="w-5 h-5 text-amber-600" />
+            <h2 className="text-sm font-semibold text-primary">
+              Inspecciones de Devolución
+            </h2>
+          </div>
+          <div className="p-6 flex-1 overflow-auto bg-background/20">
+            <PendingReturns />
+          </div>
+        </section>
       </div>
     </div>
   );
