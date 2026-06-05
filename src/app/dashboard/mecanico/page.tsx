@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { assets, loans } from '@/lib/db/schema';
-import { eq, and, gt } from 'drizzle-orm';
+import { eq, and, gt, or, isNull } from 'drizzle-orm';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/auth-options';
 import { redirect } from 'next/navigation';
@@ -19,7 +19,10 @@ export default async function MecanicoDashboard() {
   const availableAssets = await db.query.assets.findMany({
     where: and(
       eq(assets.estado, 'disponible'),
-      gt(assets.fechaVencimientoCalibracion, new Date())
+      or(
+        isNull(assets.fechaVencimientoCalibracion),
+        gt(assets.fechaVencimientoCalibracion, new Date())
+      )
     )
   });
 
@@ -40,6 +43,19 @@ export default async function MecanicoDashboard() {
     const session = await getServerSession(authOptions);
     
     if (!session) return;
+
+    // CONCURRENCY CHECK: Verify asset is still available
+    const asset = await db.query.assets.findFirst({
+      where: and(
+        eq(assets.id, assetId),
+        eq(assets.estado, 'disponible')
+      )
+    });
+
+    if (!asset) {
+      console.error('Asset no longer available');
+      return;
+    }
 
     await db.insert(loans).values({
       id: uuidv4(),

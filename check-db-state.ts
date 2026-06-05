@@ -1,5 +1,5 @@
-import { db } from './src/lib/db';
-import { assets, loans } from './src/lib/db/schema';
+import { db } from './src/lib/db/index';
+import { assets, loans } from './src/lib/db/schema/index';
 import { eq, or } from 'drizzle-orm';
 
 async function checkStates() {
