@@ -28,3 +28,17 @@ comando ejecutado: npx ts-node --compiler-options '{"module": "CommonJS", "esMod
 comando ejecutado: npx ts-node --compiler-options '{"module": "CommonJS", "esModuleInterop": true, "moduleResolution": "node"}' seed-assets.ts
 <nombre del archivo> seed-assets.ts a sido editado
 <nombre del archivo> query_logs.txt a sido editado
+
+Consulta: quiero que hagas que el menú de activos con fecha de calibración vencida sea colapsable y que estos se muestren en estado bloqueado ya que no pueden ser solicitados por el mecanico
+Respuesta: He realizado los siguientes ajustes:
+1. El componente 'ExpiredCalibrationList' ahora es colapsable, permitiendo al Pañolero ahorrar espacio en su panel.
+2. He actualizado el script de 'seed-assets.ts' para que cualquier activo con fecha de calibración vencida nazca automáticamente con el estado 'bloqueada'.
+3. He ajustado la lógica de búsqueda en el dashboard del Pañolero para que incluya activos tanto en estado 'disponible' como 'bloqueada' siempre que su calibración esté vencida, asegurando que nada se pase por alto.
+4. Con estos cambios, el mecánico tiene doble protección: el filtro por fecha y el estado 'bloqueada'.
+
+comando ejecutado: npx ts-node --compiler-options '{"module": "CommonJS", "esModuleInterop": true, "moduleResolution": "node"}' cleanup-db.ts
+comando ejecutado: npx ts-node --compiler-options '{"module": "CommonJS", "esModuleInterop": true, "moduleResolution": "node"}' seed-assets.ts
+<nombre del archivo> seed-assets.ts a sido editado
+<nombre del archivo> src/components/ExpiredCalibrationList.tsx a sido editado
+<nombre del archivo> src/app/dashboard/panolero/page.tsx a sido editado
+<nombre del archivo> query_logs.txt a sido editado
