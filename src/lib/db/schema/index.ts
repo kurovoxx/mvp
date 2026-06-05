@@ -90,5 +90,6 @@ export const loansRelations = relations(loans, ({ one }) => ({
   mecanico: one(users, {
     fields: [loans.mecanicoId],
     references: [users.id],
+    relationName: 'mecanico',
   }),
 }));
