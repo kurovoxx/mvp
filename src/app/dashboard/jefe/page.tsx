@@ -4,8 +4,21 @@ import { users, assets, loans, stateHistory } from '@/lib/db/schema';
 import { eq, or, desc, count } from 'drizzle-orm';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import CreateUserForm from '@/components/CreateUserForm';
+import Link from 'next/link';
 
-export default async function JefeDashboard() {
+export default async function JefeDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }> | { [key: string]: string | string[] | undefined };
+}) {
+  // Configuración de la paginación
+  const resolvedParams = await searchParams;
+  const page = Number(resolvedParams?.page) || 1;
+  const limit = 5; // Límite de 4 usuarios por página
+  const offset = (page - 1) * limit;
+
+  // Consultas de métricas globales
   const [activeUsers] = await db.select({ value: count() }).from(users).where(eq(users.activo, true));
   const [totalAssets] = await db.select({ value: count() }).from(assets);
   const [activeLoans] = await db.select({ value: count() }).from(loans).where(eq(loans.cierreValidado, false));
@@ -13,6 +26,7 @@ export default async function JefeDashboard() {
     .from(assets)
     .where(or(eq(assets.estado, 'bloqueada'), eq(assets.estado, 'en_evaluacion')));
 
+  // Actividad Reciente
   const recentActivity = await db
     .select({
       id: stateHistory.id,
@@ -29,6 +43,7 @@ export default async function JefeDashboard() {
     .orderBy(desc(stateHistory.createdAt))
     .limit(5);
 
+  // Alertas Críticas
   const alertsList = await db
     .select({
       id: assets.id,
@@ -39,6 +54,24 @@ export default async function JefeDashboard() {
     .from(assets)
     .where(or(eq(assets.estado, 'bloqueada'), eq(assets.estado, 'en_evaluacion')))
     .limit(5);
+
+  // Consulta del Directorio de Usuarios CON Paginación
+  const usersList = await db
+    .select({
+      id: users.id,
+      nombre: users.nombre,
+      email: users.email,
+      rol: users.rol,
+      activo: users.activo
+    })
+    .from(users)
+    .orderBy(desc(users.createdAt))
+    .limit(limit)
+    .offset(offset);
+
+  // Calcular el total de páginas
+  const [usersCountResult] = await db.select({ value: count() }).from(users);
+  const totalPages = Math.ceil(usersCountResult.value / limit);
 
   const stats = [
     { 
@@ -133,11 +166,6 @@ export default async function JefeDashboard() {
                         <p className="text-xs text-slate-600 mt-1">
                           Cambió de <span className="font-mono bg-slate-100 px-1 rounded">{activity.estadoAnterior}</span> a <span className="font-mono bg-slate-100 px-1 rounded">{activity.estadoNuevo}</span>
                         </p>
-                        {activity.motivo && (
-                          <p className="text-xs text-slate-500 mt-1.5 border-l-2 border-slate-200 pl-2">
-                            "{activity.motivo}"
-                          </p>
-                        )}
                       </div>
                       <div className="text-right">
                         <p className="text-xs font-medium text-slate-900">{activity.usuarioNombre}</p>
@@ -179,6 +207,70 @@ export default async function JefeDashboard() {
                       <span className="text-xs text-slate-600">{alert.ubicacion}</span>
                     </div>
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-4">
+        <div className="lg:col-span-1">
+          <CreateUserForm />
+        </div>
+        
+        <section className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center gap-2">
+            <Users className="w-5 h-5 text-slate-500" />
+            <h2 className="text-sm font-semibold text-slate-900">Directorio de Personal</h2>
+          </div>
+          
+          <div className="flex-1 overflow-auto p-0 flex flex-col justify-between">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Nombre</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Rol</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-slate-200">
+                {usersList.map((u) => (
+                  <tr key={u.id} className="hover:bg-slate-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <p className="text-sm font-medium text-slate-900">{u.nombre}</p>
+                      <p className="text-xs text-slate-500">{u.email}</p>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-xs font-medium uppercase text-slate-600 bg-slate-100 px-2 py-1 rounded">
+                        {u.rol.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${u.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {u.activo ? 'Activo' : 'Inactivo'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Paginador visual */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 p-4 border-t border-slate-200 bg-slate-50">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <Link
+                    key={pageNum}
+                    href={`/dashboard/jefe?page=${pageNum}`}
+                    className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-bold transition-all ${
+                      pageNum === page
+                        ? 'bg-slate-900 text-white shadow-md'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                  >
+                    {pageNum}
+                  </Link>
                 ))}
               </div>
             )}
