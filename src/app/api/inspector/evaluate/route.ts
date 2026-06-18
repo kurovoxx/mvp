@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     let nuevoEstado: any = 'disponible';
     if (dictamen === 'mantencion') nuevoEstado = 'en_reparacion';
     if (dictamen === 'baja') nuevoEstado = 'baja';
-    if (dictamen === 'reposicion') nuevoEstado = 'baja'; // O un estado nuevo si existiera
+    if (dictamen === 'reposicion') nuevoEstado = 'baja'; 
 
     // 3. Registrar evaluación técnica si hay un préstamo asociado
     if (loanId) {
@@ -41,14 +41,26 @@ export async function POST(req: Request) {
       // Si se reincorpora o se da de baja, cerramos el préstamo
       await db.update(loans).set({
         cierreValidado: true,
-        fechaHoraDevolucion: new Date(), // Aseguramos que tenga fecha de fin
+        fechaHoraDevolucion: new Date(), 
       }).where(eq(loans.id, loanId));
     }
 
     // 4. Actualizar activo
-    await db.update(assets).set({
-      estado: nuevoEstado,
-    }).where(eq(assets.id, assetId));
+    const updateData: any = { 
+      estado: nuevoEstado 
+    };
+
+    // Si el inspector decide reincorporar el activo, reseteamos su calibración
+    if (dictamen === 'reincorporar') {
+      const ahora = new Date();
+      // +180 días (6 meses). Puedes cambiar este valor según la regla de tu faena
+      const proximaCalibracion = new Date(ahora.getTime() + (180 * 24 * 60 * 60 * 1000));
+      
+      updateData.fechaUltimaCalibracion = ahora;
+      updateData.fechaVencimientoCalibracion = proximaCalibracion;
+    }
+
+    await db.update(assets).set(updateData).where(eq(assets.id, assetId));
 
     // 5. Registrar en historial
     await db.insert(stateHistory).values({

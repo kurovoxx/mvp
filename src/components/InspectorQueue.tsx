@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { assets, loans, users } from '@/lib/db/schema';
-import { eq, or, desc, and } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm'; // Hemos eliminado 'or'
 import TechnicalEvaluationForm from './TechnicalEvaluationForm';
 
 export default async function InspectorQueue() {
@@ -16,12 +16,8 @@ export default async function InspectorQueue() {
       eq(loans.cierreValidado, false)
     ))
     .leftJoin(users, eq(loans.mecanicoId, users.id))
-    .where(
-      or(
-        eq(assets.estado, 'bloqueada'),
-        eq(assets.estado, 'en_evaluacion')
-      )
-    )
+    // EL FIX: Ahora el inspector SOLO evalúa lo que está explícitamente en "en_evaluacion"
+    .where(eq(assets.estado, 'en_evaluacion'))
     .orderBy(desc(assets.createdAt));
 
   if (pendingAssets.length === 0) {
@@ -41,10 +37,13 @@ export default async function InspectorQueue() {
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-bold text-slate-900">{asset.nombre}</h3>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                    asset.estado === 'bloqueada' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
-                  }`}>
-                    {asset.estado === 'bloqueada' ? 'BLOQUEADA EN SALIDA' : 'EN EVALUACIÓN POR DAÑO'}
+                  {/* Etiqueta inteligente que le dice al inspector de dónde viene la evaluación */}
+                  <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                    {!loan 
+                      ? 'CALIBRACIÓN VENCIDA' 
+                      : loan.resultadoInspeccionSalida === 'rechazada' 
+                        ? 'RECHAZO EN SALIDA' 
+                        : 'DAÑO EN DEVOLUCIÓN'}
                   </span>
                 </div>
                 <p className="text-sm text-slate-500 mt-1">ID: {asset.id}</p>

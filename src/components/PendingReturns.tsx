@@ -16,7 +16,6 @@ export default async function PendingReturns() {
     }
   });
 
-  // Filter those where the associated asset is in 'en_devolucion' state
   const returningLoans = allActiveLoans.filter(loan => loan.activo.estado === 'en_devolucion');
 
   async function validateReturn(formData: FormData) {
@@ -32,7 +31,8 @@ export default async function PendingReturns() {
 
     if (!loan) return;
 
-    const needsEvaluation = condition === 'con_daño' || loan.falloReportadoUso;
+    // EL FIX: El Pañolero tiene la decisión final, anulamos el reporte del mecánico si decide aprobarla
+    const needsEvaluation = condition === 'con_daño';
 
     // Update loan record
     await db.update(loans)
@@ -55,6 +55,7 @@ export default async function PendingReturns() {
     revalidatePath('/dashboard/panolero');
   }
 
+  // ... (El resto del renderizado (return) se mantiene igual)
   return (
     <div className="space-y-4">
       {returningLoans.length === 0 ? (

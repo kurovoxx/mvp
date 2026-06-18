@@ -59,18 +59,15 @@ export default async function PendingApprovals() {
     const session = await getServerSession(authOptions);
     if (!session) return;
 
-    // 1. Mark loan as closed (it failed the safety gate)
     await db.update(loans)
       .set({ 
-        cierreValidado: true,
         pañoleroSalidaId: (session.user as any).id,
         resultadoInspeccionSalida: 'rechazada'
       })
       .where(eq(loans.id, loanId));
 
-    // 2. Block the asset for the Inspector
     await db.update(assets)
-      .set({ estado: 'bloqueada' })
+      .set({ estado: 'en_evaluacion' })
       .where(eq(assets.id, assetId));
 
     revalidatePath('/dashboard/panolero');
